@@ -1,0 +1,53 @@
+<html>
+<head>
+	<style>
+		textarea{
+		    height: 381px;
+			width: 484px;
+		}
+		h2, div{
+			text-align:center;
+		}
+		#result{
+		    display:none;
+		}
+	</style>
+	<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+</head>
+<body>
+	<h2>CSS to IGE Style converter</h2>
+	<div>
+    <textarea id="cssCode"></textarea>
+	    <button onclick="Converter.start();">Convert CSS</button>
+	    
+	    <textarea id="result"></textarea>
+	</div>
+	<script type="text/javascript">
+	var Converter=
+	{
+		start:function(){
+			var pattern = /\.(.*?){(.*?)}/g,
+				pattern2 = /(.*?):(.*?);/g,
+				css = $('#cssCode').val().replace(/\n/gm,''),
+				result,
+				result2,
+				html="";
+			
+			while ((result = pattern.exec(css)) !== null)
+			{		 
+				html+="ige.ui.style('."+jQuery.trim(result[1]).replace(/ /,'')+"', {\n";
+				while ((result2 = pattern2.exec(result[2])) !== null)
+				{
+					result2[1]=jQuery.trim(result2[1]).replace(/-(.){1}/,"$1".toUpperCase());
+					html+="	'"+result2[1]+"': '"+jQuery.trim(result2[2])+"',\n";
+				}
+				html=html.slice(0, - 2)+"\n});\n";
+			}
+			$('#result').html(html).show();
+		}
+
+	}	
+	</script>
+</body>
+</html>
+
